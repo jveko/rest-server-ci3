@@ -243,24 +243,34 @@
 		},
 		{
 			"name": "User",
-			"item": []
-		},
-		{
-			"name": "Add User",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{BaseURL}}/user",
-					"host": [
-						"{{BaseURL}}"
-					],
-					"path": [
-						"user"
-					]
+			"item": [
+				{
+					"name": "Add User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Testa\",\n    \"email\": \"testa@gmail.com\",\n    \"password\": \"aaaaa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseURL}}/user",
+							"host": [
+								"{{BaseURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
