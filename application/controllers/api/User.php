@@ -1,8 +1,8 @@
 <?php
 
-use chriskacerguis\RestServer\RestController;
+require_once(APPPATH . 'controllers/BaseController.php');
 
-class User extends RestController
+class User extends BaseController
 {
 	public UserModel $user;
 
@@ -14,7 +14,44 @@ class User extends RestController
 
 	public function Index_POST()
 	{
-		$this->user->Create('Test', 'test@gmail.com', password_hash('Testing', PASSWORD_BCRYPT));
-		$this->response(['message' => "Success"], RestController::HTTP_OK);
+		$username = $this->post('username');
+		$email = $this->post('email');
+		$password = $this->post('password');
+		if (!$username && !$email && $password)
+			$this->response(
+				[
+					'message' => "Username, Email, Password is Required"
+				], self::HTTP_BAD_REQUEST
+			);
+
+		if ($this->user->IsUsernameExist($username))
+			$this->response(
+				[
+					'message' => "Username Already Exist"
+				], self::HTTP_BAD_REQUEST
+			);
+
+		if ($this->user->IsEmailExist($email))
+			$this->response(
+				[
+					'message' => "Email Already Exist"
+				], self::HTTP_BAD_REQUEST
+			);
+
+		$returnedId = $this->user->Create($username, $email, password_hash($password, PASSWORD_BCRYPT));
+		if ($returnedId != null) {
+			$this->response(
+				[
+					'status' => "success",
+					'message' => "User Created",
+					'data' => [
+						'id' => $returnedId
+					]
+				], self::HTTP_CREATED);
+		}
+		$this->response(
+			[
+				'message' => "Internal Server Error",
+			], self::HTTP_INTERNAL_ERROR);
 	}
 }
